@@ -22,6 +22,7 @@ Temp/
 .vsconfig
 Assembly-CSharp.csproj
 unity-game-test.sln
+help-diagramm.psd
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
