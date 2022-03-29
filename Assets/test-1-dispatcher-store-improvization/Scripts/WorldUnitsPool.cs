@@ -8,7 +8,6 @@ public class WorldUnitsPool
     public GameObject unitViewPrefab = null;
 
     [HideInInspector] public UnitModel[] unitModels = new UnitModel[0];
-    [HideInInspector] public UnitView[] unitViews = new UnitView[0];
 
     public int Count = 0;
     int POOL_SIZE;
@@ -22,7 +21,7 @@ public class WorldUnitsPool
         this.world = world;
         this.POOL_SIZE = POOL_SIZE;
         Array.Resize(ref unitModels, unitModels.Length + POOL_SIZE);
-        Array.Resize(ref unitViews, unitViews.Length + POOL_SIZE);
+       // Array.Resize(ref unitViews, unitViews.Length + POOL_SIZE);
         var ground = GameObject.FindGameObjectWithTag("Ground");
         var v = ground.GetComponent<MeshFilter>().sharedMesh.vertices;
         var min = new Vector3(v.Min(v => v.x), 0, v.Min(v => v.z));
@@ -34,9 +33,9 @@ public class WorldUnitsPool
         {
             unitModels[i] = new UnitModel();
             unitModels[i].id = i;
-            unitViews[i] = GameObject.Instantiate(unitViewPrefab).GetComponent<UnitView>();
-            unitViews[Count].gameObject.SetActive(false);
-            unitViews[i].id = i;
+            unitModels[i].unitView = GameObject.Instantiate(unitViewPrefab).GetComponent<UnitView>();
+            unitModels[i].unitView.gameObject.SetActive(false);
+            unitModels[i].unitView.id = i;
 
             var mat = new Material(world.sourceMaterial);
             var c = colors[i % colors.Length];
@@ -45,7 +44,7 @@ public class WorldUnitsPool
             for (int h = 0; h < 3; h++)
                 res_color[h] = (byte)Convert.ToInt32("0x" + c[h * 2] + c[h * 2 + 1], 16);
             mat.SetColor("_Color", res_color);
-            foreach (var item in unitViews[i].GetComponentsInChildren<MeshRenderer>())
+            foreach (var item in unitModels[i].unitView.GetComponentsInChildren<MeshRenderer>())
                 item.sharedMaterial = mat;
         }
     }
@@ -57,7 +56,7 @@ public class WorldUnitsPool
         var z = Mathf.Lerp(minSpawnPoint.z, maxSpawnPoint.z, UnityEngine.Random.Range(0f, 1f));
         unitModels[Count].ResetUnit(unitModels[Count].id, new Vector3(x, 0, z), world);
         var _id = unitModels[Count].id;
-        unitViews[Count].gameObject.SetActive(true);
+        unitModels[Count].unitView.gameObject.SetActive(true);
         Count++;
     }
 
@@ -65,15 +64,11 @@ public class WorldUnitsPool
     {
         if (unitModels[index].drivenByUser) unitModels[index].DisconnectUser();
         unitModels[index].enabled = false;
-        unitViews[index].gameObject.SetActive(false);
+        unitModels[index].unitView.gameObject.SetActive(false);
 
         var t = unitModels[Count - 1];
         unitModels[Count - 1] = unitModels[index];
         unitModels[index] = t;
-
-        var d = unitViews[Count - 1];
-        unitViews[Count - 1] = unitViews[index];
-        unitViews[index] = d;
 
         Count--;
     }

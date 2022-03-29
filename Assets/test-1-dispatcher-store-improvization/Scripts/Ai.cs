@@ -27,6 +27,7 @@ public class Ai
 
     public void DifficultChange(int? dif)
     {
+        Debug.Log(dif);
         switch (dif ?? currentDifficult)
         {
             case 0: aiActions = new AiActions_Dif0(); break;

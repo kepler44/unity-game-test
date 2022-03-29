@@ -23,6 +23,7 @@ Temp/
 Assembly-CSharp.csproj
 unity-game-test.sln
 help-diagramm.psd
+Assets/test-2-quick-bot/
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release

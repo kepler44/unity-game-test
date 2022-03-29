@@ -39,6 +39,7 @@ static class UnitActions
     {
         yield return true;
         float timeLeft = 3;
+        u.enabled = false;
         while (timeLeft > 0)
         {
             yield return false;

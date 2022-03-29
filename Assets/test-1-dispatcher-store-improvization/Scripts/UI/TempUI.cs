@@ -39,7 +39,7 @@ class TempUI : MonoBehaviour
             {
                 if (world.unitsPool.unitModels[i].drivenByUser) hasConnected = true;
                 if (!unitCanvasPool[i].enabled) unitCanvasPool[i].enabled = true;
-                Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(Camera.main, world.unitsPool.unitViews[i].transform.position);
+                Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(Camera.main, world.unitsPool.unitModels[i].unitView.transform.position);
                 unitCanvasPool[i].GetComponent<RectTransform>().position = screenPoint;
             }
             else

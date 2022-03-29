@@ -9,12 +9,10 @@ public class AiUnit
 {
     Ai ai;
     UnitModel unitModel;
-    UnitView unitView;
     public AiUnit(Ai ai, UnitModel unit)
     {
         this.ai = ai;
         this.unitModel = unit;
-        this.unitView = ai.targetWorldModel.unitsPool.unitViews[unit.id];
     }
 
 
@@ -58,7 +56,7 @@ public class AiUnit
         UnitModel targetUnitModel = null;
         for (int i = 0; i < targets.Length; i++)
         {
-            if (!targets[i].enabled || targets[i].id == unitView.id) continue;
+            if (!targets[i].enabled || targets[i].id == unitModel.id) continue;
             var MAG = (targets[i].worldPosition - unitModel.worldPosition).sqrMagnitude;
             if (MAG > dist * dist) continue;
             if (minMag > MAG)

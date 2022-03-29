@@ -31,7 +31,7 @@ public class WorldModel : MonoBehaviour
         {
             if (!unitsPool.unitModels[i].drivenByUser) aiCommander.Command(unitsPool.unitModels[i]);
 
-            if (unitsPool.unitModels[i].unitChanged != 0) unitsPool.unitViews[i].Apply(unitsPool.unitModels[i]);
+            if (unitsPool.unitModels[i].unitChanged != 0) unitsPool.unitModels[i].unitView.Apply(unitsPool.unitModels[i]);
         }
     }
 

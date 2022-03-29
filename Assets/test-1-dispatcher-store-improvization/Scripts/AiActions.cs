@@ -124,6 +124,6 @@ public class AiActions_Dif2 : AiActions_Root
     {
         var dist = (source.worldPosition - target.worldPosition).magnitude;
         var bulletSpeed = 5;
-        return target.CalcMoveActionForSecond(dist * bulletSpeed);
+        return target.CalcMoveActionForSecond(dist / bulletSpeed);
     }
 }

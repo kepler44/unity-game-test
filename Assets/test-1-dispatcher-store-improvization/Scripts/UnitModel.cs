@@ -17,6 +17,7 @@ public class UnitModel
     public bool drivenByUser => userInput != null;
     public WorldModel world;
     public bool enabled;
+    public UnitView unitView = null;
 
     UnityLifeCycles_Input userInput;
     public void ConnectUser(UnityLifeCycles_Input UnityLifeCycles_Input)
@@ -50,6 +51,8 @@ public class UnitModel
     IEnumerator MOVE_ACTION_STACK, TOWER_ACTION_STACK, FIRE_ACTION_STACK, LOCK_ACTIONS;
     public void onInputEvent(InputData input)
     {
+
+
         unitChanged = 0;
 
         if (LOCK_ACTIONS != null && LOCK_ACTIONS.MoveNext())
@@ -58,6 +61,8 @@ public class UnitModel
         }
         else
         {
+
+            if (!enabled) return;
 
             // Move Body
             if (MOVE_ACTION_STACK != null && MOVE_ACTION_STACK.MoveNext())
@@ -109,11 +114,14 @@ public class UnitModel
     static float UNITY_SPEED = 3;
     Vector2 lastMoveVector;
     float lastSpeedMultiply;
+    int lastFrame = 0;
     bool Default_MoveAction(Vector2 moveVector, float? SPEED_MULTIPLY)
     {
         lastMoveVector = moveVector;
-        lastSpeedMultiply = (SPEED_MULTIPLY ?? 1);
         var speed = UNITY_SPEED * (SPEED_MULTIPLY ?? 1);
+        lastSpeedMultiply = speed;
+        lastFrame = Time.frameCount;
+
         moveVector.Normalize();
         worldPosition.x += moveVector.x * speed * Time.deltaTime;
         worldPosition.y = 0;
@@ -123,12 +131,12 @@ public class UnitModel
     }
     public Vector3 CalcMoveActionForSecond(float second)
     {
-        var speed = UNITY_SPEED * lastSpeedMultiply;
+        if (Time.frameCount - lastFrame > 3) return worldPosition;
         lastMoveVector.Normalize();
         Vector3 result = Vector3.zero;
-        result.x = worldPosition.x + lastMoveVector.x * speed * second;
+        result.x = worldPosition.x + lastMoveVector.x * lastSpeedMultiply * second;
         result.y = worldPosition.y;
-        result.z = worldPosition.z + lastMoveVector.y * speed * Time.deltaTime;
+        result.z = worldPosition.z + lastMoveVector.y * lastSpeedMultiply * second;
         return result;
     }
 
@@ -156,7 +164,7 @@ public class UnitModel
 
     bool Default_FireAction()
     {
-        var muzzleTransform = world.unitsPool.unitViews[id].muzzle;
+        var muzzleTransform = unitView.muzzle;
         var bullet = GameObject.Instantiate(world.bullet_prefab, muzzleTransform.position, Quaternion.identity).GetComponent<Bullet>();
         bullet.direction = muzzleTransform.forward;
         bullet.sourceId = id;
